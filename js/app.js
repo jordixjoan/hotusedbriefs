@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         {
                             name: "Shipping & Handling",
                             quantity: 1,
-                            price: "10.00",
+                            price: "15.00",
                         }
                     ]
                 }),
