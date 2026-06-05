@@ -518,6 +518,10 @@ ul {
         padding-top: 75px;
     }
 
+    .logo-text {
+        font-size: clamp(1.6rem, 4vw, 3.5rem);
+    }
+    
     #carrito {
         width: 90vw;
         right: -10px;
@@ -544,6 +548,10 @@ ul {
     .logo {
         max-height: 42px;
         margin-left: 10px;
+    }
+
+    .logo-text {
+        font-size: clamp(1.6rem, 4vw, 3.5rem);
     }
 
     .header h1 {
