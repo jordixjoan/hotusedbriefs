@@ -126,9 +126,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 itemExistente.dias === infoCurso.dias &&
                 itemExistente.extra === infoCurso.extra;
 
+            if (!mismasOpciones) {
+                articulosCarrito[indexExiste] = infoCurso;
+            }
 
-            articulosCarrito[indexExiste] = infoCurso;
-            
         } else {
             articulosCarrito = [...articulosCarrito, infoCurso];
         }
@@ -287,7 +288,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
 }
 
-            const dias = card.querySelector('.opcion-dias')?.value;
+            const selectorDias = card.querySelector('.opcion-dias');
+            const dias = selectorDias?.options[selectorDias.selectedIndex].textContent;
             const extra = card.querySelector('.opcion-extra')?.checked;
 
 
