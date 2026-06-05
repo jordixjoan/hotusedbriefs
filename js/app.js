@@ -37,33 +37,8 @@ async function procesarPago () {
         alert("El carrito está vacío. Agrega productos antes de proceder al pago.");
         return;
     }
-
-    // Calcular total y gastos de envío
-    let totalCantidad = articulosCarrito.reduce((total, item) => total + item.cantidad, 0);
-    let gastosEnvio = totalCantidad > 0 ? Math.min(1.50 + (totalCantidad - 1) * 0.50, 2.50) : 0;
-    let gastosGestion = 0.49; // Puedes modificar este valor según necesites
-
-    const paisSeleccionado = document.getElementById('pais-select').value;
-    console.log(paisSeleccionado);
-    // Calcular gastos de envío
-    if(paisSeleccionado == 'ES') {
-        if(articulosCarrito.some(item => item.id === '13') || articulosCarrito.some(item => item.id === '200')) {gastosEnvio = 2.50;}
-        else {gastosEnvio = totalCantidad > 0 ? Math.min(1.50 + (totalCantidad - 1) * 0.50, 2.50) : 0;}
-    }
-    else {
-        if(articulosCarrito.some(item => item.id === '13') || articulosCarrito.some(item => item.id === '200')) {gastosEnvio = 3.50;}
-        else {gastosEnvio = totalCantidad > 0 ? Math.min(2.50 + (totalCantidad - 1) * 0.50, 3.50) : 0;}
-    }
-    console.log(gastosEnvio);
-
-    // Comprobar si hay un artículo lámina
-    const idsLamina = ['101', '102', '103', '104'];
-
-    const tieneLamina = articulosCarrito.some(item =>idsLamina.includes(item.id));
-    // ➕ Sumar 5 € si hay una lamina
-    if (tieneLamina) {
-        gastosEnvio += 5;
-    }
+    let gastosEnvio = 10;
+    let gastosGestion = 0;
 
     try {
         const response = await fetch("https://diario-mh0q.onrender.com/create-checkout-session", {
@@ -153,7 +128,7 @@ function leerDatosCurso (curso) {
         imagen: curso.querySelector('img').src,
         titulo: curso.querySelector('h4').textContent,
         precio: curso.querySelector('.precio span').textContent,
-        id: curso.querySelector('a').getAttribute('data-id'),
+        id: curso.querySelector('.agregar-carrito').getAttribute('data-id'),
         cantidad: 1
     };
 
@@ -183,7 +158,6 @@ function carritoHTML () {
         mensajeVacio.style.display = 'block'; // Mostrar mensaje
         document.getElementById("total-carrito").style.display = 'none';
         document.getElementById("gastos-envio").style.display = 'none';
-        document.getElementById("seleccion-pais").style.display = 'none';
         document.getElementById("total-real-carrito").style.display = 'none';
         document.getElementById("aviso-correos").style.display = 'none';
         vaciarCarritoBtn.style.display = 'none'; // Ocultar botón "Vaciar carrito"
@@ -196,7 +170,6 @@ function carritoHTML () {
     document.getElementById("total-carrito").style.display = 'block';
     document.getElementById("gastos-envio").style.display = 'block';
     document.getElementById("total-real-carrito").style.display = 'block';
-    document.getElementById("seleccion-pais").style.display = 'block';
     document.getElementById("aviso-correos").style.display = 'block';
     mensajeVacio.style.display = 'none'; // Ocultar mensaje
     vaciarCarritoBtn.style.display = 'block'; // Mostrar botón "Vaciar carrito"
@@ -251,30 +224,8 @@ function carritoHTML () {
         contenedorCarrito.appendChild(row2);
     });
 
-
-    const paisSeleccionado = document.getElementById('pais-select').value;
-    let gastosGestion = 0.49;
-    let gastosEnvio;
-
-    // Calcular gastos de envío
-    if(paisSeleccionado == 'ES') {
-        if(articulosCarrito.some(item => item.id === '13') || articulosCarrito.some(item => item.id === '200')) {gastosEnvio = 2.50;}
-        else {gastosEnvio = totalCantidad > 0 ? Math.min(1.50 + (totalCantidad - 1) * 0.50, 2.50) : 0;}
-    }
-    else {
-        if(articulosCarrito.some(item => item.id === '13') || articulosCarrito.some(item => item.id === '200')) {gastosEnvio = 3.50;}
-        else {gastosEnvio = totalCantidad > 0 ? Math.min(2.50 + (totalCantidad - 1) * 0.50, 3.50) : 0;}
-    }
-
-    // Comprobar si hay un artículo con título "SE BUSCA"
-    const idsLamina = ['101', '102', '103', '104'];
-
-    const tieneLamina = articulosCarrito.some(item =>idsLamina.includes(item.id));
-    // ➕ Sumar 5 € si hay una lamina
-    if (tieneLamina) {
-        gastosEnvio += 5;
-    }
-    
+    let gastosEnvio = 10;
+    let gastosGestion = 0;
 
     let gastos = gastosEnvio +  gastosGestion;
 
@@ -305,87 +256,5 @@ function limpiarHTML () {
     }
 }
 
-function guardarCorreo() {
-    var email = document.getElementById("email").value;
-    var submitBtn = document.getElementById("submitBtn");
-    var loader = document.getElementById("loader");
-    
-    if (email.trim() === "") {
-        alert("Por favor, ingresa un correo válido.");
-        return;
-    }
 
-    // 🔄 Muestra el loader y deshabilita el botón
-    loader.style.display = "block";
-    submitBtn.style.display = "none";
-    submitBtn.disabled = true;
 
-    // Enviar el correo al backend usando fetch
-    fetch("https://diario-mh0q.onrender.com/guardar-correo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email })
-    })
-    .then(response => response.json())  // ✅ Espera la respuesta JSON
-    .then(data => {
-        if (data.success) {  // ✅ Verifica que el backend respondió con éxito
-            window.location.href = "/success/newsletter";  // ✅ Redirige al usuario
-        } else {
-            alert("Error al guardar el correo.");
-            resetBtnNewsletter();
-        }
-    })
-    .catch(error => {
-        console.error("Error en la solicitud:", error);
-        alert("Error al guardar el correo.");
-        resetBtnNewsletter();
-    });
-}
-
-function resetBtnNewsletter() {
-    loader.style.display = "none";
-    submitBtn.disabled = false;
-}
-
-const botonDonacion = document.querySelector('#boton-donacion');
-
-if (botonDonacion) {
-    botonDonacion.addEventListener('click', procesarDonacion);
-}
-
-async function procesarDonacion(e) {
-    e.preventDefault();
-
-    const cantidad = Number(document.querySelector('#cantidad-donacion').value);
-
-    if (!cantidad || cantidad < 1) {
-        alert('Introduce una cantidad válida.');
-        return;
-    }
-
-    try {
-        const response = await fetch("https://diario-mh0q.onrender.com/create-checkout-session", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                donation: true,
-                items: [
-                    {
-                        name: "Donación al proyecto DIARIO",
-                        quantity: 1,
-                        price: cantidad.toFixed(2)
-                    }
-                ]
-            }),
-        });
-
-        const data = await response.json();
-
-        if (data.url) {
-            window.location.href = data.url;
-        }
-    } catch (error) {
-        console.error("Error al procesar la donación:", error);
-        alert("Ha habido un error al procesar la donación.");
-    }
-}
