@@ -15,7 +15,6 @@ cargarEventListeners();
 function cargarEventListeners () {
     listaCursos.addEventListener('click', agregarCurso);
     carrito.addEventListener("click", eliminarCurso);
-    carrito.addEventListener("click", modificarCantidad); // Evento para botones + y -
 
     document.addEventListener('DOMContentLoaded', () => {
         articulosCarrito = JSON.parse(localStorage.getItem("carrito")) || [];
@@ -34,7 +33,7 @@ function cargarEventListeners () {
 
 async function procesarPago () {
     if (articulosCarrito.length === 0) {
-        alert("El carrito está vacío. Agrega productos antes de proceder al pago.");
+        alert("The cart is empty. Add products before proceeding to checkout.");
         return;
     }
     let gastosEnvio = 10;
@@ -49,11 +48,11 @@ async function procesarPago () {
                 items: [
                     ...articulosCarrito.map(item => ({
                     name: item.titulo,
-                    quantity: item.cantidad,
+                    quantity: 1,
                     price: item.precio,
                 })), 
                 {
-                    name: "Gastos de Envío y Gestión",
+                    name: "Shipping & Handling",
                     quantity: 1,
                     price: (gastosEnvio + gastosGestion).toFixed(2),
                 } 
@@ -86,7 +85,7 @@ function productoAgregado (curso) {
     const alert = document.createElement("H4");
     alert.style.cssText = " color: black; text-align: left;";
     alert.style.margin = "-10px 20px";
-    alert.textContent = 'Añadido al carrito';
+    alert.textContent = 'Added to cart';
     curso.appendChild(alert);
     setTimeout(() => {
         alert.remove();
@@ -102,47 +101,22 @@ function eliminarCurso (e) {
     }
 }
 
-function modificarCantidad (e) {
-    if (e.target.classList.contains('aumentar-cantidad')) {
-        const cursoId = e.target.getAttribute("data-id");
-        articulosCarrito = articulosCarrito.map(curso => {
-            if (curso.id === cursoId) {
-                curso.cantidad++;
-            }
-            return curso;
-        });
-    } else if (e.target.classList.contains('disminuir-cantidad')) {
-        const cursoId = e.target.getAttribute("data-id");
-        articulosCarrito = articulosCarrito.map(curso => {
-            if (curso.id === cursoId && curso.cantidad > 1) {
-                curso.cantidad--;
-            }
-            return curso;
-        });
-    }
-    carritoHTML();
-}
-
 function leerDatosCurso (curso) {
     const infoCurso = {
         imagen: curso.querySelector('img').src,
         titulo: curso.querySelector('h4').textContent,
         precio: curso.querySelector('.precio span').textContent,
-        id: curso.querySelector('.agregar-carrito').getAttribute('data-id'),
-        cantidad: 1
+        id: curso.querySelector('.agregar-carrito').getAttribute('data-id')
     };
 
-    const existe = articulosCarrito.some(curso => curso.id === infoCurso.id);
+    const existe = articulosCarrito.some(item => item.id === infoCurso.id);
+
     if (existe) {
-        articulosCarrito = articulosCarrito.map(curso => {
-            if (curso.id === infoCurso.id) {
-                curso.cantidad++;
-            }
-            return curso;
-        });
-    } else {
-        articulosCarrito = [...articulosCarrito, infoCurso];
+    alert("This item is already in your cart.");
+    return;
     }
+
+    articulosCarrito = [...articulosCarrito, infoCurso];
 
     carritoHTML();
 }
@@ -151,7 +125,6 @@ function carritoHTML () {
     limpiarHTML();
 
     let total = 0;
-    let totalCantidad = 0; // Contador de la cantidad total de artículos
 
     if (articulosCarrito.length === 0) {
         // Si el carrito está vacío, mostramos el mensaje y ocultamos los botones
@@ -176,52 +149,19 @@ function carritoHTML () {
     procederCompraBtn.style.display = 'block'; // Mostrar botón "Proceder a compra"
 
     articulosCarrito.forEach(curso => {
-        // Crear la primera fila
         const row1 = document.createElement('tr');
-        const precioTotal = parseFloat(curso.precio.replace('€', '').replace(',', '.')) * curso.cantidad;
-        total += precioTotal;
-        totalCantidad += curso.cantidad;
 
-        // Columna de imagen con rowspan para ocupar dos filas
-        const imagenTd = document.createElement('td');
-        imagenTd.rowSpan = 2;
-        imagenTd.innerHTML = `<img src="${curso.imagen}" width="60">`;
+        const precio = parseFloat(curso.precio.replace('€', '').replace(',', '.'));
+        total += precio;
 
-        // Columna de título
-        const tituloTd = document.createElement('td');
-        tituloTd.textContent = curso.titulo;
-
-        // Columna de precio (cantidad * precio)
-        const precioTd = document.createElement('td');
-        precioTd.textContent = `${(parseFloat(curso.precio.replace('€', '').replace(',', '.')) * curso.cantidad).toFixed(2)}€`;
-
-        // Se agrega la primera fila con imagen, título y precio
-        row1.appendChild(imagenTd);
-        row1.appendChild(tituloTd);
-        row1.appendChild(precioTd);
-
-        // Crear la segunda fila
-        const row2 = document.createElement('tr');
-
-        // Columna de cantidad con botones + y -
-        const cantidadTd = document.createElement('td');
-        cantidadTd.innerHTML = `<span style='margin-left:15px;'>Cantidad: </span>
-        ${curso.cantidad > 1 ? `<button class="disminuir-cantidad" data-id="${curso.id}">−</button>` : ""}
-            <span>${curso.cantidad}</span>
-            <button class="aumentar-cantidad" data-id="${curso.id}">+</button>
+        row1.innerHTML = `
+            <td><img src="${curso.imagen}" width="60"></td>
+            <td>${curso.titulo}</td>
+            <td>${precio.toFixed(2)}€</td>
+            <td><a href="#" class="borrar-curso" data-id="${curso.id}">X</a></td>
         `;
 
-        // Columna de borrar curso
-        const borrarTd = document.createElement('td');
-        borrarTd.innerHTML = `<a href="#" class="borrar-curso" data-id="${curso.id}">X</a>`;
-
-        // Se agrega la segunda fila con cantidad y botón de borrar
-        row2.appendChild(cantidadTd);
-        row2.appendChild(borrarTd);
-
-        // Agregar filas al contenedor del carrito
         contenedorCarrito.appendChild(row1);
-        contenedorCarrito.appendChild(row2);
     });
 
     let gastosEnvio = 10;
@@ -242,7 +182,7 @@ function carritoHTML () {
 }
 
 function actualizarCantidadCarrito () {
-    const cantidadTotal = articulosCarrito.reduce((total, curso) => total + curso.cantidad, 0);
+    const cantidadTotal = articulosCarrito.length;
     cantidadCarrito.textContent = cantidadTotal;
 }
 

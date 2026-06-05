@@ -43,7 +43,7 @@ app.post("/create-checkout-session", async (req, res) => {
                     parseFloat(String(item.price).replace('€', '').replace(',', '.')) * 100
                 ),
             },
-            quantity: item.quantity,
+            quantity: 1,
         }));
 
         const session = await stripe.checkout.sessions.create({
