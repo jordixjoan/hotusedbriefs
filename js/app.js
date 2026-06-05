@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
             titulo: curso.querySelector('h4').textContent,
             precio: precioFinal,
             id: idBase,
-            dias: selectorDias.value,
+            dias: selectorDias.options[selectorDias.selectedIndex].textContent,
             extra: checkboxExtra.checked
         };
 
@@ -174,8 +174,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>
                     ${curso.titulo}<br>
                     <small>
-                        ${curso.dias == 30 ? '1 day of use' : curso.dias == 40 ? '3 days of use' : '7 days of use'}
-                        ${curso.extra ? '+ Cum on it + Video' : ''}
+                       ${curso.dias}
+                      ${curso.extra ? '+ Cum on it + Video' : ''}
                     </small>
                 </td>
                 <td>${precio.toFixed(2)}€</td>
