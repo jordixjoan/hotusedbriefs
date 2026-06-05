@@ -41,7 +41,7 @@ async function procesarPago () {
     let gastosGestion = 0;
 
     try {
-        const response = await fetch("https://diario-mh0q.onrender.com/create-checkout-session", {
+        const response = await fetch("https://hotusedbriefs.onrender.com/create-checkout-session", {
             method: "POST",
 
             headers: { "Content-Type": "application/json" },

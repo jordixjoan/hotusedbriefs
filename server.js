@@ -9,9 +9,9 @@ const app = express();
 
 // Configurar CORS correctamente
 const allowedOrigins = [
-    "https://jordixjoan.com",  // Tu frontend en GitHub Pages
-    "https://www.jordixjoan.com",
-    "https://diario-mh0q.onrender.com",
+    "https://hotusedbriefs.com",  // Tu frontend en GitHub Pages
+    "https://www.hotusedbriefs.com",
+    "https://hotusedbriefs.onrender.com",
     "http://127.0.0.1:5000",         // Backend local
     "http://127.0.0.1:5500"          // Si usas Live Server u otro puerto
 ];
@@ -72,8 +72,8 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
         console.log("Productos comprados:", lineItems);
         
         // Aquí puedes guardar los datos en tu base de datos o enviarlos donde los necesites
-        const appsScriptUrl = "https://script.google.com/macros/s/AKfycbyzBO1uogEn06NCZuXAVACgM-OvPZwsgP7qHz3l8qVZECdj9ew9jttQ_RFnzY2XyBNs/exec";
-
+        //const appsScriptUrl = "https://script.google.com/macros/s/AKfycbyzBO1uogEn06NCZuXAVACgM-OvPZwsgP7qHz3l8qVZECdj9ew9jttQ_RFnzY2XyBNs/exec";
+        /*
         try {
             await fetch(appsScriptUrl, {
             method: "POST",
@@ -93,6 +93,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
         } catch (error) {
         console.error("❌ Error enviando datos a Apps Script:", error.message);
         }
+        */
     }
 
     res.status(200).json({ received: true });
@@ -101,7 +102,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.redirect('https://www.jordixjoan.com');
+    res.redirect('https://www.hotusedbriefs.com');
 });
 
 // Endpoint para crear la sesión de pago con Stripe
@@ -174,34 +175,7 @@ app.post("/create-checkout-session", async (req, res) => {
     }
 });
 
-// Ruta para guardar el correo
-app.post("/guardar-correo", async (req, res) => {
-    const email = req.body.email;
-    console.log("guarda correo");
-    // Verificar si se ha recibido un correo
-    if (!email) {
-        return res.status(400).json({ error: "Correo electrónico es requerido" });
-    }
-    
-    try {
-        // Llama a tu Google Apps Script (la URL del servicio web)
-        const response = await fetch("https://script.google.com/macros/s/AKfycbyIL-3FZcyt1Y6V-9cZ-KheBV9BCGFY5ZnWi5Mq66-GBPogu3TjWmny2SP9QjqnbrtD/exec", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: email })
-        });
 
-        if (response.ok) {
-            res.json({ success: true });  // Responde con éxito al frontend
-        } else {
-            const responseText = await response.text();
-            console.log("Error al guardar correo:", responseText);
-            res.status(500).json({ error: "Error al guardar el correo" });
-        }
-    } catch (error) {
-        res.status(500).json({ error: "Error al conectar con el servidor de Google Sheets" });
-    }
-});
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 5000;
