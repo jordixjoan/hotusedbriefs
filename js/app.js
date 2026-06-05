@@ -13,6 +13,36 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarEventListeners();
     carritoHTML();
 
+    const modal = document.getElementById("videoModal");
+    const player = document.getElementById("videoPlayer");
+    const cerrar = document.getElementById("cerrarVideo");
+
+    document.querySelectorAll(".abrir-video").forEach(btn => {
+
+        btn.addEventListener("click", () => {
+
+            const video = btn.dataset.video;
+
+            player.src = video;
+            modal.style.display = "block";
+            player.play();
+        });
+    });
+
+    cerrar.addEventListener("click", () => {
+        modal.style.display = "none";
+        player.pause();
+        player.currentTime = 0;
+    });
+
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+            player.pause();
+            player.currentTime = 0;
+        }
+    });
+
     /* ACTUALIZAR PRECIOS DINÁMICAMENTE */
 
     document.querySelectorAll(".card").forEach(card => {
@@ -269,4 +299,28 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    function abrirVideo001() {
+        document.getElementById("video001").style.display = "block";
+
+        const video = document.getElementById("video001-player");
+        video.currentTime = 0;
+        video.play();
+    }
+
+    function cerrarVideo001() {
+        document.getElementById("video001").style.display = "none";
+
+        const video = document.getElementById("video001-player");
+        video.pause();
+        video.currentTime = 0;
+    }
+
+    window.addEventListener("click", function(e) {
+        const modal = document.getElementById("video001");
+
+        if (e.target === modal) {
+            cerrarVideo001();
+        }
+    });
 });
