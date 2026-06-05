@@ -11,6 +11,11 @@ const allowedOrigins = [
     "http://127.0.0.1:5500"
 ];
 
+const fs = require("fs");
+const path = require("path");
+
+const productsPath = path.join(__dirname, "products.json");
+
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
@@ -23,15 +28,81 @@ app.use(cors({
     allowedHeaders: "Content-Type,Authorization"
 }));
 
+app.post("/webhook", express.raw({ type: "application/json" }), (req, res) => {
+    const sig = req.headers["stripe-signature"];
+
+    let event;
+
+    try {
+        event = stripe.webhooks.constructEvent(
+            req.body,
+            sig,
+            process.env.STRIPE_WEBHOOK_SECRET
+        );
+    } catch (err) {
+        console.error("Webhook signature error:", err.message);
+        return res.sendStatus(400);
+    }
+
+    if (event.type === "checkout.session.completed") {
+        const session = event.data.object;
+
+        const productIds = session.metadata.product_ids
+            ? session.metadata.product_ids.split(",")
+            : [];
+
+        const products = JSON.parse(fs.readFileSync(productsPath, "utf8"));
+
+        productIds.forEach(id => {
+            const product = products.find(p => p.id === id);
+
+            if (product) {
+                product.stock = 0;
+            }
+        });
+
+        fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
+
+        console.log("Products marked as sold:", productIds);
+    }
+
+    res.sendStatus(200);
+});
+
 app.use(express.json());
 
 app.get('/', (req, res) => {
     res.redirect('https://www.hotusedbriefs.com');
 });
 
+app.get("/products", (req, res) => {
+    const products = JSON.parse(fs.readFileSync(productsPath, "utf8"));
+    res.json(products);
+});
+
 app.post("/create-checkout-session", async (req, res) => {
     try {
         const { items } = req.body;
+
+        const products = JSON.parse(fs.readFileSync(productsPath, "utf8"));
+
+        const realItems = items.filter(item => item.id);
+
+        for (const item of realItems) {
+            const product = products.find(p => p.id === item.id);
+
+            if (!product) {
+                return res.status(400).json({
+                    error: "Product not found."
+                });
+            }
+
+            if (product.stock <= 0) {
+                return res.status(400).json({
+                    error: `${product.name} is already sold.`
+                });
+            }
+        }
 
         const lineItems = items.map(item => ({
             price_data: {
@@ -58,6 +129,9 @@ app.post("/create-checkout-session", async (req, res) => {
             },
             phone_number_collection: {
                 enabled: true,
+            },
+            metadata: {
+                product_ids: realItems.map(item => item.id).join(",")
             },
         });
 

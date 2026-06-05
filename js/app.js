@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cargarEventListeners();
     carritoHTML();
+    cargarStockProductos();
 
     const modal = document.getElementById("videoModal");
     const player = document.getElementById("videoPlayer");
@@ -228,6 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     items: [
                         ...articulosCarrito.map(item => ({
+                            id: item.id,
                             name: item.titulo,
                             quantity: 1,
                             price: item.precio,
@@ -242,6 +244,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await response.json();
+
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
 
             if (data.url) {
                 window.location.href = data.url;
@@ -272,8 +279,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const boton = card.querySelector('.agregar-carrito');
             const id = boton.dataset.id;
 
+            if (boton.dataset.sold === "true") {
+            boton.textContent = "SOLD";
+            boton.style.backgroundColor = "red";
+            boton.style.borderColor = "red";
+            boton.style.color = "white";
+            boton.style.pointerEvents = "none";
+            boton.style.opacity = "1";
+            return;
+}
+
             const dias = card.querySelector('.opcion-dias')?.value;
             const extra = card.querySelector('.opcion-extra')?.checked;
+
 
             const itemCarrito = articulosCarrito.find(item => item.id === id);
 
@@ -323,4 +341,29 @@ document.addEventListener('DOMContentLoaded', () => {
             cerrarVideo001();
         }
     });
+
+    async function cargarStockProductos() {
+    try {
+        const response = await fetch("https://hotusedbriefs.onrender.com/products");
+        const products = await response.json();
+
+        document.querySelectorAll(".agregar-carrito").forEach(boton => {
+            const id = boton.dataset.id;
+            const product = products.find(p => p.id === id);
+
+            if (product && product.stock <= 0) {
+                boton.dataset.sold = "true";
+                boton.textContent = "SOLD";
+                boton.style.backgroundColor = "red";
+                boton.style.borderColor = "red";
+                boton.style.color = "white";
+                boton.style.pointerEvents = "none";
+                boton.style.opacity = "1";
+            }
+        });
+
+    } catch (error) {
+        console.error("Error loading stock:", error);
+    }
+}
 });
