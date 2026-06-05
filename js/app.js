@@ -230,18 +230,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     items: [
-                        ...articulosCarrito.map(item => ({
-                            id: item.id,
-                            name: item.titulo,
-                            quantity: 1,
-                            price: item.precio,
-                        })),
-                        {
-                            name: "Shipping & Handling",
-                            quantity: 1,
-                            price: "10.00",
-                        }
-                    ]
+                    ...articulosCarrito.map(item => ({
+                        id: item.id,
+                        name: item.titulo,
+                        quantity: 1,
+                        price: item.precio,
+                        extra: item.extra
+                    })),
+                    {
+                        name: "Shipping & Handling",
+                        quantity: 1,
+                        price: "10.00"
+                    }
+                ]
                 }),
             });
 

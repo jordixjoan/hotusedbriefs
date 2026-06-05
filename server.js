@@ -28,7 +28,7 @@ app.use(cors({
     allowedHeaders: "Content-Type,Authorization"
 }));
 
-app.post("/webhook", express.raw({ type: "application/json" }), (req, res) => {
+app.post("/webhook", express.raw({ type: "application/json" }), async (req, res) => {
     const sig = req.headers["stripe-signature"];
 
     let event;
@@ -47,23 +47,71 @@ app.post("/webhook", express.raw({ type: "application/json" }), (req, res) => {
     if (event.type === "checkout.session.completed") {
         const session = event.data.object;
 
-        const productIds = session.metadata.product_ids
-            ? session.metadata.product_ids.split(",")
-            : [];
+        try {
+            const productIds = session.metadata.product_ids
+                ? session.metadata.product_ids.split(",")
+                : [];
 
-        const products = JSON.parse(fs.readFileSync(productsPath, "utf8"));
+            const extraIds = session.metadata.extra_ids
+                ? session.metadata.extra_ids.split(",")
+                : [];
 
-        productIds.forEach(id => {
-            const product = products.find(p => p.id === id);
+            const products = JSON.parse(fs.readFileSync(productsPath, "utf8"));
 
-            if (product) {
-                product.stock = 0;
+            productIds.forEach(id => {
+                const product = products.find(p => p.id === id);
+
+                if (product) {
+                    product.stock = 0;
+                }
+            });
+
+            fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
+
+            console.log("Products marked as sold:", productIds);
+
+            const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
+
+            if (process.env.APPS_SCRIPT_URL) {
+                await fetch(process.env.APPS_SCRIPT_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name: session.customer_details?.name || "Not specified",
+                        email: session.customer_details?.email || "Not specified",
+                        phone: session.customer_details?.phone || "Not specified",
+                        address: [
+                            session.customer_details?.address?.line1,
+                            session.customer_details?.address?.line2,
+                            session.customer_details?.address?.city,
+                            session.customer_details?.address?.state,
+                            session.customer_details?.address?.postal_code,
+                            session.customer_details?.address?.country
+                        ].filter(Boolean).join(", "),
+                        items: lineItems.data.map((item, index) => {
+                            const productId = productIds[index];
+                            const hasVideo = extraIds.includes(productId);
+
+                            return {
+                                id: productId,
+                                name: item.description,
+                                quantity: item.quantity,
+                                price: (item.amount_total / 100).toFixed(2),
+                                currency: item.currency.toUpperCase(),
+                                hasVideo: hasVideo
+                            };
+                        })
+                    })
+                });
+
+                console.log("Order sent to Apps Script");
             }
-        });
 
-        fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
-
-        console.log("Products marked as sold:", productIds);
+        } catch (error) {
+            console.error("Error processing completed checkout:", error);
+        }
     }
 
     res.sendStatus(200);
@@ -131,7 +179,11 @@ app.post("/create-checkout-session", async (req, res) => {
                 enabled: true,
             },
             metadata: {
-                product_ids: realItems.map(item => item.id).join(",")
+                product_ids: realItems.map(item => item.id).join(","),
+                extra_ids: realItems
+                    .filter(item => item.extra === true)
+                    .map(item => item.id)
+                    .join(",")
             },
         });
 
