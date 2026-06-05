@@ -13,6 +13,40 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarEventListeners();
     carritoHTML();
 
+    /* ACTUALIZAR PRECIOS DINÁMICAMENTE */
+
+    document.querySelectorAll(".card").forEach(card => {
+
+        const selectorDias = card.querySelector(".opcion-dias");
+        const checkboxExtra = card.querySelector(".opcion-extra");
+        const precioElemento = card.querySelector(".precio-final");
+
+        if (!selectorDias || !checkboxExtra || !precioElemento) return;
+
+        function actualizarPrecio() {
+
+            let precio = parseFloat(selectorDias.value);
+
+            if (checkboxExtra.checked) {
+                precio += 30;
+            }
+
+            precioElemento.textContent = precio.toFixed(2) + "€";
+        }
+
+        selectorDias.addEventListener("change", () => {
+            actualizarPrecio();
+            actualizarEstadoBotones();
+        });
+
+        checkboxExtra.addEventListener("change", () => {
+            actualizarPrecio();
+            actualizarEstadoBotones();
+        });
+
+        actualizarPrecio();
+    });
+
     function cargarEventListeners () {
         listaCursos.addEventListener('click', agregarCurso);
         carrito.addEventListener("click", eliminarCurso);
@@ -26,31 +60,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function agregarCurso (e) {
+
+    if (e.target.classList.contains('agregar-carrito')) {
         e.preventDefault();
 
-        if (e.target.classList.contains('agregar-carrito')) {
-            const curso = e.target.closest('.card');
-            leerDatosCurso(curso);
-            productoAgregado(curso);
-        }
+        const curso = e.target.closest('.card');
+        leerDatosCurso(curso);
+        productoAgregado(curso);
     }
+}
 
     function leerDatosCurso (curso) {
+        const selectorDias = curso.querySelector('.opcion-dias');
+        const checkboxExtra = curso.querySelector('.opcion-extra');
+        const precioFinal = curso.querySelector('.precio-final').textContent;
+
+        const idBase = curso.querySelector('.agregar-carrito').getAttribute('data-id');
+
         const infoCurso = {
             imagen: curso.querySelector('img').getAttribute('src'),
             titulo: curso.querySelector('h4').textContent,
-            precio: curso.querySelector('.precio span').textContent,
-            id: curso.querySelector('.agregar-carrito').getAttribute('data-id')
+            precio: precioFinal,
+            id: idBase,
+            dias: selectorDias.value,
+            extra: checkboxExtra.checked
         };
 
-        const existe = articulosCarrito.some(item => item.id === infoCurso.id);
+        const indexExiste = articulosCarrito.findIndex(item => item.id === idBase);
 
-        if (existe) {
-            alert("This item is already in your cart.");
-            return;
+        if (indexExiste !== -1) {
+            const itemExistente = articulosCarrito[indexExiste];
+
+            const mismasOpciones =
+                itemExistente.dias === infoCurso.dias &&
+                itemExistente.extra === infoCurso.extra;
+
+
+            articulosCarrito[indexExiste] = infoCurso;
+            
+        } else {
+            articulosCarrito = [...articulosCarrito, infoCurso];
         }
 
-        articulosCarrito = [...articulosCarrito, infoCurso];
         carritoHTML();
     }
 
@@ -69,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             procederCompraBtn.style.display = 'none';
             cantidadCarrito.textContent = 0;
             sincronizarStorage();
+            actualizarEstadoBotones();
             return;
         }
 
@@ -88,7 +140,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             row1.innerHTML = `
                 <td><img src="${curso.imagen}" width="60"></td>
-                <td>${curso.titulo}</td>
+                <td>
+                    ${curso.titulo}<br>
+                    <small>
+                        ${curso.dias == 30 ? '1 day of use' : curso.dias == 40 ? '3 days of use' : '7 days of use'}
+                        ${curso.extra ? '+ Cum on it' : ''}
+                    </small>
+                </td>
                 <td>${precio.toFixed(2)}€</td>
                 <td><a href="#" class="borrar-curso" data-id="${curso.id}">X</a></td>
             `;
@@ -104,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("total-real").textContent = `${totalReal.toFixed(2)}€`;
 
         actualizarCantidadCarrito();
+        actualizarEstadoBotones();
         sincronizarStorage();
     }
 
@@ -174,5 +233,40 @@ document.addEventListener('DOMContentLoaded', () => {
         while (contenedorCarrito.firstChild) {
             contenedorCarrito.removeChild(contenedorCarrito.firstChild);
         }
+    }
+
+    function actualizarEstadoBotones() {
+
+        document.querySelectorAll('.card').forEach(card => {
+
+            const boton = card.querySelector('.agregar-carrito');
+            const id = boton.dataset.id;
+
+            const dias = card.querySelector('.opcion-dias')?.value;
+            const extra = card.querySelector('.opcion-extra')?.checked;
+
+            const itemCarrito = articulosCarrito.find(item => item.id === id);
+
+            if (!itemCarrito) {
+                boton.textContent = 'Add to cart';
+                boton.style.opacity = '1';
+                boton.style.pointerEvents = 'auto';
+                return;
+            }
+
+            const mismasOpciones =
+                itemCarrito.dias === dias &&
+                itemCarrito.extra === extra;
+
+            if (mismasOpciones) {
+                boton.textContent = '✓ Item already in cart';
+                boton.style.opacity = '0.6';
+                boton.style.pointerEvents = 'none';
+            } else {
+                boton.textContent = 'Update cart';
+                boton.style.opacity = '1';
+                boton.style.pointerEvents = 'auto';
+            }
+        });
     }
 });
