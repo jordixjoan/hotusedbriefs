@@ -106,7 +106,16 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
                     })
                 });
 
-                console.log("Order sent to Apps Script");
+                const googleResponse = await fetch(process.env.GOOGLE_SCRIPT_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(orderData)
+                });
+
+                const googleText = await googleResponse.text();
+
+                console.log("Apps Script status:", googleResponse.status);
+                console.log("Apps Script response:", googleText);
             }
 
         } catch (error) {
