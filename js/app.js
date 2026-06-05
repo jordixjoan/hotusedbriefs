@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${curso.titulo}<br>
                     <small>
                         ${curso.dias == 30 ? '1 day of use' : curso.dias == 40 ? '3 days of use' : '7 days of use'}
-                        ${curso.extra ? '+ Cum on it' : ''}
+                        ${curso.extra ? '+ Cum on it + Video' : ''}
                     </small>
                 </td>
                 <td>${precio.toFixed(2)}€</td>
@@ -197,10 +197,12 @@ document.addEventListener('DOMContentLoaded', () => {
         sincronizarStorage();
     }
 
-    function productoAgregado (curso) {
-        const aviso = document.createElement("H4");
-        aviso.style.cssText = "color: black; text-align: left; margin: -10px 20px;";
-        aviso.textContent = 'Added to cart';
+    function productoAgregado(curso) {
+        const aviso = document.createElement("div");
+
+        aviso.className = "mensaje-carrito";
+        aviso.textContent = "✓ Added to cart";
+
         curso.appendChild(aviso);
 
         setTimeout(() => {

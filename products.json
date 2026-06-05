@@ -8,5 +8,10 @@
     "id": "002",
     "name": "Levis 001",
     "stock": 1
+  },
+  {
+    "id": "003",
+    "name": "Diesel 001",
+    "stock": 1
   }
 ]

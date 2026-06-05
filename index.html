@@ -19,7 +19,9 @@
         <link rel="preload" href="./css/skeleton.css" as="style">
         <link rel="stylesheet" href="./css/skeleton.css">
         <link rel="stylesheet" href="./css/custom.css">
-        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nosifer&display=swap" rel="stylesheet">
         
     </head>
 
@@ -28,6 +30,7 @@
             <div class="container">
                 <div class="header-content">
                     <img src="./img/briefs.png" alt="Logo briefs" class="logo">
+                    <h1 class="logo-text">HOTUSEDBRIEFS</h1>
                     <div class="cart">
                         <a href="#" id="mostrar-carrito">Cart (<span id="cantidad-carrito">0</span>)</a>
                         <div id="carrito" class="cart-dropdown">
@@ -58,11 +61,11 @@
             <div class="row"></div>
 
             <div class="row" style="margin-left:20px;">
-                <h1 style="font-family: 'Castellar','Cinzel';">Briefs</h1>
-                <p style="font-family: Bodoni MT; margin-top: -20px;">Get a hot used brief, damn!</p>
+                <h1 style="font-family: 'Impact';">Briefs</h1>
+                <p style="font-family: Georgia; margin-top: -10px;">Get a hot used brief, damn!</p>
             </div>
 
-            <div class="row">
+            <div class="row" style="margin-top: -60px;">
                <div class="four columns">
                     <div class="card" style="height: 100%;">
                         <img src="./img/calvin001.jpg" class="imagen-curso u-full-width" 
@@ -140,9 +143,52 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="four columns">
+                    <div class="card" style="height: 100%;">
+                        <img src="./img/diesel001.jpg" class="imagen-curso u-full-width" 
+                        onmouseout="this.src='./img/diesel001.jpg';"
+                        onmouseover="this.src='./img/diesel001_over.jpg';">
+
+                        <div class="info-card">
+                            <h4>Diesel 001</h4>
+                            <select class="opcion-dias">
+                                <option value="30">1 day of use</option>
+                                <option value="40">3 days of use</option>
+                                <option value="60">7 days of use</option>
+                            </select>
+
+                            <label>
+                                <input type="checkbox" class="opcion-extra">
+                                Cum on it? (Video included)
+                            </label>
+
+                            <button
+                                type="button"
+                                class="button abrir-video"
+                                data-video="./video/diesel001.mp4">
+                                ▶ Watch video
+                            </button>
+
+                            <p class="precio">
+                                <span class="u-pull-right precio-final">
+                                    30.00€
+                                </span>
+                            </p>
+
+                            <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="003">
+                                Add to cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
                 
-            
+            <div class="row" style="margin-left:20px;">
+                <h1 style="font-family: 'Impact';">Socks</h1>
+                <p style="font-family: Georgia; margin-top: -10px;">Smell a sock, damn!</p>
+            </div>
 
         </div>
 
@@ -177,6 +223,8 @@
                     </div>
                 </div>
             </div>
+
+
         </footer>
 
         <div id="videoModal" class="video-modal">
