@@ -2,102 +2,26 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const bodyParser = require("body-parser");  // Asegúrate de agregar esta línea
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 const app = express();
 
-// Configurar CORS correctamente
 const allowedOrigins = [
-    "https://hotusedbriefs.com",  // Tu frontend en GitHub Pages
+    "https://hotusedbriefs.com",
     "https://www.hotusedbriefs.com",
-    "https://hotusedbriefs.onrender.com",
-    "http://127.0.0.1:5000",         // Backend local
-    "http://127.0.0.1:5500"          // Si usas Live Server u otro puerto
+    "http://127.0.0.1:5500"
 ];
 
 app.use(cors({
     origin: function (origin, callback) {
-        console.log("🌐 Origin:", origin);
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
             callback(new Error("Not allowed by CORS"));
         }
     },
-    methods: "GET,POST,PUT,DELETE",
+    methods: "GET,POST",
     allowedHeaders: "Content-Type,Authorization"
 }));
-
-app.use((req, res, next) => {
-    console.log("📥 Request:", req.method, req.originalUrl);
-    next();
-  });
-
-// Ruta para manejar los eventos de Stripe
-app.post("/webhook", express.raw({ type: "application/json" }), async (req, res) => {
-    console.log("🔍 Tipo de body:", typeof req.body); 
-    console.log("🔍 Es buffer:", Buffer.isBuffer(req.body)); // DEBE SER TRUE
-
-    console.log("🔔 Webhook recibido");
-    const sig = req.headers["stripe-signature"];
-    let event;
-
-    try {
-        event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-    } catch (err) {
-        console.error("Webhook signature verification failed:", err.message);
-        return res.status(400).send(`Webhook Error: ${err.message}`);
-    }
-
-    // Manejar el evento de sesión completada
-    if (event.type === "checkout.session.completed") {
-        const session = event.data.object;
-        
-        // Recuperar la sesión con productos expandidos
-        const sessionWithLineItems = await stripe.checkout.sessions.retrieve(session.id, {
-            expand: ["line_items.data.price.product"],
-        });
-
-        const lineItems = sessionWithLineItems.line_items.data.map(item => ({
-            id: item.id,
-            quantity: item.quantity,
-            price: item.price ? parseFloat(item.price.unit_amount / 100) : 0,
-            currency: item.currency,
-            description: item.description || item.price.product?.name, // Usar 'name' si no hay 'description'
-        })); 
-
-        const customerDetails = session.customer_details;
-        console.log("Datos del cliente:", customerDetails);
-        console.log("Productos comprados:", lineItems);
-        
-        // Aquí puedes guardar los datos en tu base de datos o enviarlos donde los necesites
-        //const appsScriptUrl = "https://script.google.com/macros/s/AKfycbyzBO1uogEn06NCZuXAVACgM-OvPZwsgP7qHz3l8qVZECdj9ew9jttQ_RFnzY2XyBNs/exec";
-        /*
-        try {
-            await fetch(appsScriptUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                type: "checkout.session.completed",
-                data: {
-                object: {
-                    id: session.id,
-                    customer_details: customerDetails,
-                },
-                line_items: lineItems,
-                },
-            }),
-        });
-        console.log("✅ Datos enviados correctamente a Apps Script");
-        } catch (error) {
-        console.error("❌ Error enviando datos a Apps Script:", error.message);
-        }
-        */
-    }
-
-    res.status(200).json({ received: true });
-});
 
 app.use(express.json());
 
@@ -105,12 +29,9 @@ app.get('/', (req, res) => {
     res.redirect('https://www.hotusedbriefs.com');
 });
 
-// Endpoint para crear la sesión de pago con Stripe
 app.post("/create-checkout-session", async (req, res) => {
     try {
-        const { items, donation } = req.body;
-
-        console.log(items);
+        const { items } = req.body;
 
         const lineItems = items.map(item => ({
             price_data: {
@@ -119,53 +40,26 @@ app.post("/create-checkout-session", async (req, res) => {
                     name: item.name,
                 },
                 unit_amount: Math.round(
-                    parseFloat(
-                        String(item.price).replace('€', '').replace(',', '.')
-                    ) * 100
+                    parseFloat(String(item.price).replace('€', '').replace(',', '.')) * 100
                 ),
             },
             quantity: item.quantity,
         }));
 
-        const sessionConfig = {
+        const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             line_items: lineItems,
             mode: "payment",
             success_url: `${process.env.FRONTEND_URL}/success/pago`,
             cancel_url: `${process.env.FRONTEND_URL}/cancel`,
-        };
-
-        // SOLO pedir dirección para productos físicos
-        if (!donation) {
-
-            sessionConfig.billing_address_collection = "required";
-
-            sessionConfig.shipping_address_collection = {
-                allowed_countries: [
-                    "ES", // España
-                    "DE", // Alemania
-                    "FR", // Francia
-                    "GB", // Reino Unido
-                    "IT", // Italia
-                    "NL", // Países Bajos
-                    "SE", // Suecia
-                    "CH", // Suiza
-                    "BE", // Bélgica
-                    "PL", // Polonia
-                    "AT", // Austria
-                    "IE", // Irlanda
-                    "DK", // Dinamarca
-                    "FI", // Finlandia
-                    "PT"  // Portugal
-                ]
-            };
-
-            sessionConfig.phone_number_collection = {
+            billing_address_collection: "required",
+            shipping_address_collection: {
+                allowed_countries: ["ES", "DE", "FR", "GB", "IT", "NL", "SE", "CH", "BE", "PL", "AT", "IE", "DK", "FI", "PT"]
+            },
+            phone_number_collection: {
                 enabled: true,
-            };
-        }
-
-        const session = await stripe.checkout.sessions.create(sessionConfig);
+            },
+        });
 
         res.json({ url: session.url });
 
@@ -175,8 +69,5 @@ app.post("/create-checkout-session", async (req, res) => {
     }
 });
 
-
-
-// Iniciar el servidor
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, "0.0.0.0", () => console.log(`Server running on port ${PORT}`));
