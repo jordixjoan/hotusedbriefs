@@ -576,15 +576,6 @@ ul {
     }
 }
 
-h1 {
-    font-family: 'Nosifer', cursive;
-    font-size: 5rem;
-    color: #111111;
-    letter-spacing: 2px;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-}
-
 .card {
     position: relative;
 }
@@ -615,6 +606,8 @@ h1 {
     }
 }
 
+/* HEADER DESKTOP */
+
 .header-content {
     position: relative;
     display: flex;
@@ -630,4 +623,92 @@ h1 {
     font-family: 'Nosifer', cursive;
     font-size: 3.5rem;
     white-space: nowrap;
+    color: #111;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+    body {
+        padding-top: 140px;
+    }
+
+    .header-content {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .logo {
+        order: 1;
+        margin: 0;
+        max-height: 36px;
+    }
+
+    .logo-text {
+        order: 2;
+        position: static;
+        transform: none;
+        width: 100%;
+        text-align: center;
+        font-size: 1.4rem;
+        margin-top: 5px;
+        letter-spacing: 0;
+    }
+
+    .cart {
+        order: 3;
+        width: 100%;
+        text-align: center;
+        margin-top: 5px;
+        padding-bottom: 0;
+    }
+
+    #mostrar-carrito {
+        justify-content: center;
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    #carrito {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        width: 92vw;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .logo-text {
+        font-size: 1.1rem;
+    }
+
+    #mostrar-carrito {
+        font-size: 1.3rem;
+    }
+}
+
+@media (min-width: 769px) {
+
+    .header-content {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .logo {
+        margin-right: auto;
+    }
+
+    .cart {
+        margin-left: auto;
+        width: auto;
+    }
+
+    #mostrar-carrito {
+        margin-right: 20px;
+    }
 }
