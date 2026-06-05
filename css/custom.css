@@ -1,0 +1,344 @@
+html {
+    font-size: 62.5%;
+}
+body {
+    padding-top: 80px;  /* Ajusta según la altura de tu encabezado */
+    background-color: white
+}
+h2 {
+    font-size: 3rem;
+}
+h4 {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #D1D1D1;
+    padding: 20px 0;
+    z-index: 1000;  /* Asegura que el encabezado esté por encima de otros elementos */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);  /* Añade sombra para darle un poco de profundidad */
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo {
+    max-height: 50px;
+    margin-left: 20px;
+    margin-top: -5px;
+}
+.cart {
+    margin-top: -5px;
+    position: relative;
+}
+
+.cart-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 500px;
+    max-width: 100%; /* Permite que el ancho sea flexible */
+}
+
+.cart:hover .cart-dropdown {
+    display: block;
+}
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 768px) {
+    .cart-dropdown {
+        width: 330%;  /* Ajusta el ancho en dispositivos pequeños */
+        left: 90%;
+        transform: translateX(-100%); /* Centra el carrito */
+    }
+}
+#aviso-correos {
+    font-size: 10px;
+    text-align: center;
+    margin-top: 5px;
+}
+
+@media (max-width: 100px) {
+    .header-content {
+        flex-direction: row;
+    }
+}
+
+
+
+
+
+
+.borrar-curso {
+    background-color: black;
+    border-radius: 100%;
+    padding: 5px 9px;
+    text-decoration: none;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+}
+
+ul {
+    list-style: none;
+}
+
+.submenu {
+    position: relative;
+}
+
+.submenu #carrito{
+    display: none;
+}
+
+#carrito {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 1000;
+    background-color: whitesmoke;
+    padding: 20px;
+    min-height: 100px;
+    min-width: 300px; /* Tamaño mínimo en pantallas grandes */
+    max-width: 90vw; /* Limita el ancho máximo al 90% de la pantalla */
+    max-height: 80vh; /* No supera el 90% de la pantalla en altura */
+    overflow-y: auto; /* Scroll solo si es necesario */
+    overflow-x: hidden; /* Evita scroll horizontal */
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box; /* Padding y border no afectan el tamaño */
+}
+
+.submenu:hover #carrito {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 1;
+    background-color: whitesmoke;
+    padding: 20px;
+    min-height: 100px;
+    min-width: 300px;
+}
+
+
+.disminuir-cantidad,
+.aumentar-cantidad {
+    font-size: 12px;  /* Tamaño del texto */
+    padding: 2px 6px;  /* Espaciado interno */
+    width: 30px;  /* Ancho fijo */
+    height: 30px; /* Alto fijo */
+    line-height: 16px; /* Alineación del texto */
+    text-align: center;  
+    border-radius: 4px; /* Bordes redondeados */
+    border: 1px solid #ccc; /* Borde sutil */
+    background-color: #f8f8f8; /* Color de fondo */
+    cursor: pointer;
+}
+
+#gastos-envio {
+    margin-top: 0px; /* Ajusta el valor según necesites */
+}
+
+#seleccion-pais {
+    margin-top: -20px; /* Ajusta el valor según necesites */
+}
+
+#total-real-carrito {
+    margin-top: -20px; /* Ajusta el valor según necesites */
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.vacio {
+    padding: 10px;
+    background-color: crimson;
+    text-align: center;
+    border-radius: 10px;
+    color: white;
+}
+.contenido-hero {
+    margin-top: 80px;
+    color: white;
+}
+.contenido-hero form {
+    position: relative;
+    margin-bottom: 0;
+}
+.contenido-hero form #buscador {
+    height: 50px;
+    margin-bottom: 0;
+}
+.contenido-hero form .submit-buscador {
+    position: absolute;
+    right:0;
+    top:0;
+    height: 100%;
+    padding: 0;
+    display: block;
+    text-indent: -9999px;
+    width: 50px;
+    background-image: url(../img/lupa.png);
+    background-position: right center;
+    background-repeat: no-repeat;
+    border:none;
+}
+
+.imagen-curso {
+    width: 100%;
+    height: auto; /* Ajusta según tu diseño */
+    min-height: 250px;
+    display: block;
+    max-height: 250px;
+    object-fit: contain; 
+}
+
+#mostrar-carrito {
+    text-decoration: none; /* Elimina el subrayado */
+    color: black; /* Cambia el color a negro */
+    display: flex; /* Habilita el uso de flexbox */
+    align-items: 50px; /* Centra el contenido verticalmente */
+    justify-content: center; /* Si también quieres centrarlo horizontalmente */
+    margin-top: 10px;
+    margin-right: 20px;
+    font-size: 1.9rem;
+    font-family: Bodoni MT;
+}
+
+
+.barra {
+    padding: 20px 0;
+    background: whitesmoke; /* Old browsers */
+}
+
+.barra p {
+    margin:0;
+    color: white;
+}
+
+#lista-cursos .row {
+    margin-bottom:20px;
+}
+.agregar-carrito {
+    color: black; /* Cambia el color del texto a negro */
+}
+
+.card {
+    text-align: center;
+    margin-top: 5px;
+    background: white;
+}
+@media (min-width: 550px) {
+    .card {
+        text-align: left;
+    }
+}
+.info-card  {
+    padding: 10px 20px;
+}
+
+.info-card p, 
+.card h4 {
+    margin-bottom: 5px;
+}
+
+.info-card h4 {
+    font-family: Bodoni MT;
+    font-size: 2rem;
+}
+
+.info-card .precio {
+    text-decoration: line-through;
+    font-size: 18px;
+    margin-top: 10px;
+}
+.info-card .precio span {
+    font-weight: 700;
+    font-size: 22px;
+}
+
+.footer .container .row {
+    display: flex; /* Usamos flexbox para distribuir las columnas */
+    justify-content: space-between; /* Para asegurarnos de que las columnas estén distribuidas de forma equitativa */
+    margin: 0; /* Para eliminar cualquier margen extra que pueda generar desalineación */
+}
+
+.container .message {
+    margin: 40px 20px 20px 20px;
+}
+.container .message button {
+    margin-top: 20px;
+}
+
+.footer nav {
+    flex: 1; /* Cada columna ocupará el 25% del contenedor */
+    padding: 20px; /* Añade espacio interno en cada columna */
+    background-color: #D1D1D1; /* Fondo claro para las columnas */
+    border-radius: 8px; /* Bordes redondeados */
+    box-sizing: border-box; /* Incluye padding en el tamaño total de la columna */
+    margin: 0 10px; /* Espacio horizontal entre las columnas */
+}
+
+.footer h2 {
+    margin-bottom: 10px; /* Espacio debajo del título */
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.footer {
+    background-color: #D1D1D1;
+}
+
+.footer p {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.footer .enlace {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+}
+
+.enlace {
+    color: #333;
+}
+
+.enlace:hover {
+    text-decoration: underline;
+}
+
+.footer .enlace:hover {
+    text-decoration: underline;
+}
+
+/* Medios de comunicación: Responsividad */
+@media screen and (max-width: 768px) {
+    .footer .container .row {
+        flex-direction: column; /* En pantallas pequeñas, las columnas se apilan verticalmente */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .footer .container .row {
+        flex-direction: column; /* En pantallas muy pequeñas, las columnas se apilan verticalmente */
+    }
+}
+

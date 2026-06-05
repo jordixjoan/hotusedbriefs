@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>jordixjoan</title>
+        <link rel="icon" href="/img/jxj.png" type="image/png">
+
+        <meta property="og:title" content="jordixjoan">
+        <meta property="og:description" content="Descubre DIARIO, mi fanzine.">
+        <meta property="og:image" content="https://jordixjoan.com/img/jxj.png">
+        <meta property="og:url" content="https://www.jordixjoan.com">
+        <meta property="og:type" content="website">
+
+        <link rel="preload" href="/css/normalize.css" as="style">
+        <link rel="stylesheet" href="/css/normalize.css">
+        <link rel="preload" href="/css/skeleton.css" as="style">
+        <link rel="stylesheet" href="/css/skeleton.css">
+        <link rel="stylesheet" href="/css/custom.css">
+        
+        
+    </head>
+
+    <body>
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <img src="/img/jxj.png" alt="Logo JXJ" class="logo">
+                    <div class="cart">
+                        <a href="#" id="mostrar-carrito">Carrito (<span id="cantidad-carrito">0</span>)</a>
+                        <div id="carrito" class="cart-dropdown">
+                            <h4>Mi carrito</h4>
+                            <table id="lista-carrito">
+                                <tbody></tbody>
+                            </table>
+                            <p id="mensaje-vacio" style="display: none;">El carrito está vacío</p>
+                            <div id="total-carrito" style="display: none;">
+                                <p>Subtotal: <span id="total-precio">0.00€</span></p>
+                            </div>
+                            <div id="seleccion-pais">
+                                <select id="pais-select">
+                                    <option value="ES">España</option>
+                                    <option value="EU">Resto de Europa</option>
+                                </select>
+                            </div>
+                            <div id="gastos-envio" style="display: none;">
+                                <p>Gastos de envío y gestión: <span id="total-envio">0.00€</span></p>
+                            </div>
+                            <div id="total-real-carrito" style="display: none;">
+                                <p>Total: <span id="total-real">0.00€</span></p>
+                            </div>
+                            <a href="#" id="vaciar-carrito" class="button">Vaciar Carrito</a>
+                            <a href="#" id="proceder-compra" class="button">Proceder compra</a>
+                            <p id="aviso-correos">Al hacer una compra, aceptas recibir correos de jordixjoan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div id="lista-cursos" class="container">
+            <div class="row"></div>
+
+            <div class="row" style="margin-left:20px;">
+                <h1 style="font-family: 'Castellar','Cinzel';">Diario</h1>
+                <p style="font-family: Bodoni MT; margin-top: -20px;">Diario es un fanzine mensual con cuentos, historias, guiones y minijuegos que, <br> 
+                    una vez desplegado como un mapa, <br>
+                    ofrece una obra plástica en formato A3.</p>
+            </div>
+
+            <div class="row">
+                <div class="four columns">
+    <div class="card" style="height: 100%; position: relative;">
+
+        <!-- Etiqueta -->
+        <div style="
+            position:absolute;
+            top:10px;
+            left:10px;
+            background:#000;
+            color:white;
+            padding:8px 12px;
+            border-radius:20px;
+            font-size:12px;
+            font-weight:bold;
+            z-index:10;
+            letter-spacing:0.5px;
+        ">
+            ✨ COLABORADOR OFICIAL
+        </div>
+
+        <img src="img/diarios-pack.png"
+             class="imagen-curso u-full-width"
+             onmouseout="this.src='img/diarios-pack.png';"
+             onmouseover="this.src='img/diarios-12.png';">
+
+        <div class="info-card">
+
+            <h4>Los 12 DIARIOS</h4>
+
+            <div style="
+                background:#f7f7f7;
+                border-left:4px solid #000;
+                padding:10px;
+                margin-bottom:15px;
+                font-size:14px;
+                line-height:1.4;
+            ">
+                Compra este pack antes del <strong>16 de julio</strong> y tu nombre aparecerá en la
+                <strong>cartela oficial de agradecimientos</strong>
+                de la exposición.
+            </div>
+
+            <p>Pack completo - Lo que vivo me hace artista</p>
+
+            <p class="precio">
+                <span class="u-pull-right">40€</span>
+            </p>
+
+            <a href="#"
+               class="u-full-width button-primary button input agregar-carrito"
+               data-id="13">
+               Agregar Al Carrito
+            </a>
+        </div>
+    </div>
+</div>
+
+
+            <div class="four columns">
+            <div class="card" style="height: 100%;">
+                <img src="img/jxj.png" class="imagen-curso u-full-width" 
+                onmouseout="this.src='img/jxj.png';"
+                onmouseover="this.src='img/portada-enero-2025.png';">
+                <div class="info-card">
+                    <h4>Donación</h4>
+                    <p>Si quieres apoyar la exposición y los futuros proyectos,
+                    puedes hacer una aportación de la cantidad que desees.</p>
+                    <label for="cantidad-donacion" style="font-weight:bold;">
+    Introduce una cantidad
+</label>
+
+<div style="position:relative; margin-bottom:0px;">
+    <input
+        type="number"
+        id="cantidad-donacion"
+        value="5"
+        min="1"
+        step="1"
+        class="u-full-width"
+        placeholder="Cantidad"
+        style="
+            padding-right:45px;
+            font-size:18px;
+            height:46px;
+            border:2px solid #000;
+            border-radius:8px;
+        "
+    >
+
+    <span style="
+    position:absolute;
+    right:15px;
+    top:0;
+    height:46px;
+    line-height:46px;
+    font-size:20px;
+    font-weight:bold;
+    color:#000;
+    pointer-events:none;
+">€</span>
+</div>
+
+<button
+    id="boton-donacion"
+    class="u-full-width button-primary button input"
+    >
+    Donar al proyecto
+</button>
+
+                </div>
+            </div> <!--.card-->
+        </div>
+
+            </div> <!--.row-->
+
+            <div class="row" style="margin-left:20px;">
+                <h1 style="font-family: 'Bodoni MT','Cinzel';">Láminas</h1>
+                <p style="font-family: Bodoni MT; margin-top: -20px;"></p>
+            </div>
+
+            <div class="row">
+                <div class="four columns">
+                    <div class="card" style="height: 100%;">
+                        <img src="img/se_busca_cerca.jpg" class="imagen-curso u-full-width" 
+                        onmouseout="this.src='img/se_busca_cerca.jpg';"
+                        onmouseover="this.src='img/se_busca_cuadro.jpg';">
+                        <div class="info-card">
+                            <h4>Lámina - SE BUSCA</h4>
+                            <p>Serigrafía tamaño A3 sobre papel espejo.</b></p>
+                            <p class="precio"> <span class="u-pull-right ">30.00€</span></p>
+                            <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="102">Agregar Al Carrito</a>
+                        </div>
+                    </div> <!--.card-->
+                </div>
+                <div class="four columns">
+                    <div class="card" style="height: 100%;">
+                        <img src="img/rosas_cerca.jpg" class="imagen-curso u-full-width" 
+                        onmouseout="this.src='img/rosas_cerca.jpg';"
+                        onmouseover="this.src='img/rosas_cuadro.jpg';"> 
+                        <div class="info-card">
+                            <h4>Lámina - Si estás triste pinta rosas</h4>
+                            <p>Obra gráfica tamaño A3.</b></p>
+                            <p class="precio"> <span class="u-pull-right ">20.00€</span></p>
+                            <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="101">Agregar Al Carrito</a>
+                        </div>
+                    </div> <!--.card-->
+                </div>
+                <div class="four columns">
+                    <div class="card" style="height: 100%;">
+                        <img src="img/halcon_cerca.jpg" class="imagen-curso u-full-width" 
+                        onmouseout="this.src='img/halcon_cerca.jpg';"
+                        onmouseover="this.src='img/halcon_cuadro.jpg';">
+                        <div class="info-card">
+                            <h4>Lámina - El halcón ciego</h4>
+                            <p>Obra gráfica tamaño A3.</b></p>
+                            <p class="precio"> <span class="u-pull-right ">20.00€</span></p>
+                            <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="103">Agregar Al Carrito</a>
+                        </div>
+                    </div> <!--.card-->
+                </div>
+
+            </div> <!--.row-->
+            <div class="row">
+                <div class="four columns">
+                    <div class="card" style="height: 100%;">
+                        <img src="img/demonios_cerca.jpg" class="imagen-curso u-full-width" 
+                        onmouseout="this.src='img/demonios_cerca.jpg';"
+                        onmouseover="this.src='img/demonios_cuadro.jpg';">
+                        <div class="info-card">
+                            <h4>Original - Demonios</h4>
+                            <p>Obra realizada a mano a partir de la pieza original, tamaño A3.</b></p>
+                            <p class="precio"> <span class="u-pull-right ">50.00€</span></p>
+                            <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="104">Agregar Al Carrito</a>
+                        </div>
+                    </div> <!--.card-->
+                </div>
+                <div class="four columns">
+                    <div class="card" style="height: 100%;">
+                        <img src="img/freddie_mercury_cerca.jpg" class="imagen-curso u-full-width" 
+                        onmouseout="this.src='img/freddie_mercury_cerca.jpg';"
+                        onmouseover="this.src='img/freddie_mercury_cuadro.jpg';">
+                        <div class="info-card">
+                            <h4>Láminas - ¡Resucitad a Freddie Mercury!</h4>
+                            <p>4 obras gráficas tamaño A6 que forman un conjunto.</b></p>
+                            <p class="precio"> <span class="u-pull-right ">10.00€</span></p>
+                            <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="105">Agregar Al Carrito</a>
+                        </div>
+                    </div> <!--.card-->
+                </div>
+                <div class="four columns">
+                    <div class="card" style="height: 100%;">
+                        <img src="img/rosas_postales_cuadro.jpg" class="imagen-curso u-full-width" 
+                        onmouseout="this.src='img/rosas_postales_cuadro.jpg';"
+                        onmouseover="this.src='img/rosas_postales_cerca.jpg';">
+                        <div class="info-card">
+                            <h4>Postal + Sticker - Si estás triste pinta rosas</h4>
+                            <p>Postal tamaño A6 y pegatina transparente.</b></p>
+                            <p class="precio"> <span class="u-pull-right ">3.50€</span></p>
+                            <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="106">Agregar Al Carrito</a>
+                        </div>
+                    </div> <!--.card-->
+                </div>
+            </div><!--.row-->
+            
+            <div class="row" style="margin-left:20px;">
+                <h1 style="font-family: 'Bodoni MT','Cinzel';">Cuentos</h1>
+                <p style="font-family: Bodoni MT; margin-top: -20px;">La serie Muchas maneras de acabar con todo es un conjunto de seis cuentos <br> 
+                    que hablan del fin de las cosas. Aunque forman parte del mismo universo, cada uno <br>
+                    es independiente y explora un "acabar" diferente.</p>
+            </div>
+
+            <div class="row">
+                <div class="four columns">
+                    <div class="card" style="height: 100%;">
+                        <img src="img/libros-pack.png" class="imagen-curso u-full-width" 
+                        onmouseout="this.src='img/libros-pack.png';"
+                        onmouseover="this.src='img/firma fotos.png';">
+                        <div class="info-card">
+                            <h4>Muchas maneras de acabar con todo</h4>
+                            <p>Pack completo - 6 cuentos</p>
+                            <p class="precio"> <span class="u-pull-right ">20€</span></p>
+                            <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="200">Agregar Al Carrito</a>
+                        </div>
+                    </div> <!--.card-->
+                </div>
+            </div> <!--.row-->
+            
+
+        </div>
+
+        <div class="barra">
+            <div class="container">
+                <h4 id="NEWSLETTER" style="text-align:center; font-size: 2rem;">Suscríbete al NEWSLETTER</h4>
+                <input type="text" id="email" class="u-full-width" name="email" placeholder="Tu correo electrónico">
+                <button onclick="guardarCorreo()"id="submitBtn" class="u-full-width button-primary button">Suscribirse</button>
+                <div id="loader" style="display:none;" >
+                    ⏳ Enviando...
+                </div>
+            </div>
+        </div>
+
+        <footer id="footer" class="footer">
+            <div class="container">
+                <div class="row">
+                    <div>
+                        <nav id="principal">
+                            <h2>Jordi-Joan</h2>
+                            <p>¡Sígueme en Instagram!</p>
+                            <a class="enlace" href="https://www.instagram.com/jordixjoan" target="_blank">
+                                <img src="/img/insta-logo.png" alt="Instagram" style="width: 30px; height: 30px;">
+                              </a>
+                        </nav>
+                    </div>
+                    <div class="four columns">
+                        <nav id="secundaria">
+                            <h2>Enlaces</h2>
+                            <a class="enlace" href="#">Volver arriba</a>
+                        </nav>
+                    </div>
+                    <div class="four columns">
+                        <nav id="secundaria">
+                            <h2>Ayuda & Info</h2>
+                            <a class="enlace" href="/info/envio/">Gastos de envío y gestión</a>
+                        </nav>
+                    </div>
+                    <div class="four columns">
+                        <nav id="secundaria">
+                            <h2>Contáctanos</h2>
+                            <p>¿Tienes alguna pregunta?</a>
+                            <a class="enlace" href="mailto:jordijoan_98@hotmail.com">jordijoan_98@hotmail.com</a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script src="/js/app.js"></script>
+
+    </body>
+
+</html>
