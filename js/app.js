@@ -280,12 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const id = boton.dataset.id;
 
             if (boton.dataset.sold === "true") {
-            boton.textContent = "SOLD";
-            boton.style.backgroundColor = "red";
-            boton.style.borderColor = "red";
-            boton.style.color = "white";
-            boton.style.pointerEvents = "none";
-            boton.style.opacity = "1";
+            marcarBotonComoSold(boton);
             return;
 }
 
@@ -342,6 +337,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    function marcarBotonComoSold(boton) {
+        boton.dataset.sold = "true";
+        boton.textContent = "SOLD";
+        boton.style.setProperty("background-color", "red", "important");
+        boton.style.setProperty("border-color", "red", "important");
+        boton.style.setProperty("color", "white", "important");
+        boton.style.pointerEvents = "none";
+        boton.style.opacity = "1";
+    }
+
     async function cargarStockProductos() {
     try {
         const response = await fetch("https://hotusedbriefs.onrender.com/products");
@@ -352,13 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const product = products.find(p => p.id === id);
 
             if (product && product.stock <= 0) {
-                boton.dataset.sold = "true";
-                boton.textContent = "SOLD";
-                boton.style.backgroundColor = "red";
-                boton.style.borderColor = "red";
-                boton.style.color = "white";
-                boton.style.pointerEvents = "none";
-                boton.style.opacity = "1";
+                marcarBotonComoSold(boton);
             }
         });
 
